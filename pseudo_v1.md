@@ -6,7 +6,7 @@ TYPE Grid
 ENDTYPE
 
 FUNCTION Create_grid(w, h)
-    IF (w < 0 OR h < 0) THEN RETURN NULL
+    IF (w <= 0 OR h <= 0) THEN RETURN NULL
 
     DECLARE new_grid as Grid
     
@@ -44,7 +44,7 @@ FUNCTION Check_rules(grid, x, y)
     RETURN state
 ENDFUNCTION
 
-FUNCTION Count_neighbours(grid, x, y, n)
+FUNCTION Count_neighbours(grid, x, y)
     DECLARE n as INT = 0
 
     IF x = 0 THEN Check_y_left_x(grid, x, y, n)
@@ -55,6 +55,8 @@ FUNCTION Count_neighbours(grid, x, y, n)
 ENDFUNCTION
 
 PROCEDURE Check_y_left_x(grid, x, y, n)
+    DECLARE i, j as INT
+
     IF y = 0 THEN
         FOR i = x to x + 1
             FOR j = y to y + 1
@@ -80,6 +82,8 @@ PROCEDURE Check_y_left_x(grid, x, y, n)
 ENDPROCEDURE
 
 PROCEDURE Check_y_mid_x(grid, x, y, n)
+    DECLARE i, j as INT
+
     IF y = 0 THEN
         FOR i = x - 1 to x + 1
             FOR j = y to y + 1
@@ -105,6 +109,8 @@ PROCEDURE Check_y_mid_x(grid, x, y, n)
 ENDPROCEDURE
 
 PROCEDURE Check_y_right_x(grid, x, y, n)
+    DECLARE i, j as INT
+
     IF y = 0 THEN
         FOR i = x - 1 to x
             FOR j = y to y + 1
@@ -130,6 +136,8 @@ PROCEDURE Check_y_right_x(grid, x, y, n)
 ENDPROCEDURE
 
 //last minute thought: does the grid wrap around itself or is it bounded??? If it's bounded i'm gonna have to rework sooooo many ifs
+//currently rereading instructions: replace TRUE/FALSE with 1/0
+//by default, the grid has an edge; the option -p or --periodic, i.e. the horizontal and vertical edges wrap around each other
 
 FUNCTION Is_neighbour(i, j, x, y)
     IF (i = x AND j = y) THEN RETURN FALSE
