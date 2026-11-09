@@ -1,19 +1,19 @@
 ```text
 
 TYPE Grid
-    DEFINE width, height as INT
-    DEFINE cells[width, height] as BOOL     //TRUE = live; cells[0,0] exists
+    DECLARE width, height as INT
+    DECLARE cells[width, height] as BOOL     //TRUE = live; cells[0,0] exists
 ENDTYPE
 
 FUNCTION Create_grid(w, h)
     IF (w < 0 OR h < 0) THEN RETURN NULL
 
-    DEFINE new_grid as Grid
+    DECLARE new_grid as Grid
     
     new_grid.width = w
     new_grid.height = h
 
-    DEFINE i, j as INT
+    DECLARE i, j as INT
 
     FOR i = 0 to w
         FOR j = 0 to h: new_grid.cells[i,j] = FALSE
@@ -23,7 +23,7 @@ FUNCTION Create_grid(w, h)
 ENDFUNCTION
 
 FUNCTION Update_grid(grid)
-    DEFINE i, j as INT
+    DECLARE i, j as INT
     FOR i = 0 to grid.width
         FOR j = 0 to grid.height: grid.cells[i,j] = Check_rules(grid, i, j)
     NEXT i
@@ -32,11 +32,11 @@ FUNCTION Update_grid(grid)
 ENDFUNCTION
 
 FUNCTION Check_rules(grid, x, y)
-    DEFINE n as INT = Count_neightbours(grid, x, y)
-    DEFINE state as BOOL = grid.cells[x,y]
+    DECLARE n as INT = Count_neighbours(grid, x, y)
+    DECLARE state as BOOL = grid.cells[x,y]
 
     IF state = TRUE THEN
-        IF (n < 2 AND n > 3) THEN state = FALSE
+        IF (n < 2 OR n > 3) THEN state = FALSE
     ELSE
         IF n = 3 THEN state = TRUE
     ENDIF
@@ -44,17 +44,17 @@ FUNCTION Check_rules(grid, x, y)
     RETURN state
 ENDFUNCTION
 
-FUNCTION Count_neightbours(grid, x, y)
+FUNCTION Count_neighbours(grid, x, y, n)
     DECLARE n as INT = 0
 
-    IF x = 0 THEN Check_y_left_x(grid, x, y)
-    ELSEIF x > 0 AND x < grid.width THEN Check_y_mid_x(grid, x, y)
-    ELSE Check_y_right_x(grid, x, y)
+    IF x = 0 THEN Check_y_left_x(grid, x, y, n)
+    ELSEIF x > 0 AND x < grid.width THEN Check_y_mid_x(grid, x, y, n)
+    ELSE Check_y_right_x(grid, x, y, n)
 
     RETURN n
 ENDFUNCTION
 
-PROCEDURE Check_y_left_x(grid, x, y)
+PROCEDURE Check_y_left_x(grid, x, y, n)
     IF y = 0 THEN
         FOR i = x to x + 1
             FOR j = y to y + 1
@@ -79,7 +79,7 @@ PROCEDURE Check_y_left_x(grid, x, y)
     ENDIF
 ENDPROCEDURE
 
-PROCEDURE Check_y_mid_x(grid, x, y)
+PROCEDURE Check_y_mid_x(grid, x, y, n)
     IF y = 0 THEN
         FOR i = x - 1 to x + 1
             FOR j = y to y + 1
@@ -104,7 +104,7 @@ PROCEDURE Check_y_mid_x(grid, x, y)
     ENDIF
 ENDPROCEDURE
 
-PROCEDURE Check_y_right_x(grid, x, y)
+PROCEDURE Check_y_right_x(grid, x, y, n)
     IF y = 0 THEN
         FOR i = x - 1 to x
             FOR j = y to y + 1
@@ -128,6 +128,8 @@ PROCEDURE Check_y_right_x(grid, x, y)
         NEXT i
     ENDIF
 ENDPROCEDURE
+
+//last minute thought: does the grid wrap around itself or is it bounded??? If it's bounded i'm gonna have to rework sooooo many ifs
 
 FUNCTION Is_neighbour(i, j, x, y)
     IF (i = x AND j = y) THEN RETURN FALSE
