@@ -137,7 +137,8 @@ ENDPROCEDURE
 
 //last minute thought: does the grid wrap around itself or is it bounded??? If it's bounded i'm gonna have to rework sooooo many ifs
 //currently rereading instructions: replace TRUE/FALSE with 1/0
-//by default, the grid has an edge; the option -p or --periodic, i.e. the horizontal and vertical edges wrap around each other
+//by default, the grid has an edge; the option -p or --periodic makes the horizontal and vertical edges wrap around each other
+//currently adding a checklist for counting neighbours
 
 FUNCTION Is_neighbour(i, j, x, y)
     IF (i = x AND j = y) THEN RETURN FALSE
