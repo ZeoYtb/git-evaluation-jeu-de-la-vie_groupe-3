@@ -104,7 +104,7 @@ PROCEDURE Check_y_mid_x(grid, x, y)
     ENDIF
 ENDPROCEDURE
 
-ROCEDURE Check_y_right_x(grid, x, y)
+PROCEDURE Check_y_right_x(grid, x, y)
     IF y = 0 THEN
         FOR i = x - 1 to x
             FOR j = y to y + 1
