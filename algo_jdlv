@@ -1,0 +1,38 @@
+DEBUT
+ Demander les paramètres du programme
+ Créer une grille carrée
+ Remplir la grille avec des cellules vivantes ou mortes
+    SI une matrice est fournie en entrée
+        Lire la matrice
+    SINON
+        Générer une grille aléatoire
+    FIN SI
+   Afficher la grille initiale
+
+    POUR chaque génération :
+        Créer une nouvelle grille vide
+
+        POUR chaque cellule de la grille :
+            Compter les 8 voisins de la cellule
+
+            SI la cellule est vivante :
+                SI elle possède 2 ou 3 voisins vivants
+                    Elle reste vivante
+                SINON
+                    Elle devient morte
+                FIN SI
+
+            SINON :
+                SI elle possède exactement 3 voisins vivants
+                    Elle devient vivante
+                SINON
+                    Elle reste morte
+                FIN SI
+            FIN SI
+            Enregistrer l'état de la cellule
+            dans la nouvelle grille
+        FIN POUR
+        Remplacer l'ancienne grille par la nouvelle
+        Afficher ou enregistrer la génération
+    FIN POUR
+FIN
