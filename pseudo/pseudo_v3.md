@@ -2,7 +2,7 @@
 
 TYPE Grid
     DECLARE width, height as INT
-    DECLARE cells[width, height] as BOOL     //TRUE = live; cells[0,0] exists
+    DECLARE cells[width, height] as INT     //cells[0,0] exists
 ENDTYPE
 
 FUNCTION Create_grid(w, h)
@@ -10,13 +10,13 @@ FUNCTION Create_grid(w, h)
 
     DECLARE new_grid as Grid
     
-    new_grid.width = w
-    new_grid.height = h
+    new_grid.width = w - 1
+    new_grid.height = h - 1
 
     DECLARE i, j as INT
 
     FOR i = 0 to w
-        FOR j = 0 to h: new_grid.cells[i,j] = FALSE
+        FOR j = 0 to h: new_grid.cells[i,j] = 0
     NEXT i
 
     RETURN new_grid
