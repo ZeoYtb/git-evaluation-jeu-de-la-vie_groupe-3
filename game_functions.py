@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import random
+import argparse
 
 @dataclass
 class Grille:
@@ -12,6 +13,56 @@ def nouvelle_grille(w: int, h:int) -> Grille | None:  #returns Grid or None
 
     cells = [[0 for _ in range(w)] for _ in range(h)]  #creates a grid of 0s
     return Grille(width=w, height=h, cells=cells)
+
+def convertir_en_entier(texte):
+    try:
+        return int(texte)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"'{texte}' n'est pas un entier")
+
+
+def entier_strictement_positif(texte):
+    valeur = convertir_en_entier(texte)
+    if valeur <= 0:
+        raise argparse.ArgumentTypeError(
+            f"doit être strictement positif (reçu : {valeur})")
+    return valeur
+
+
+def entier_positif_ou_nul(texte):
+    valeur = convertir_en_entier(texte)
+    if valeur < 0:
+        raise argparse.ArgumentTypeError(
+            f"doit être positif ou nul (reçu : {valeur})")
+    return valeur
+
+
+def lire_arguments():
+    parseur = argparse.ArgumentParser(
+        description="Simulation du jeu de la vie de Conway.")
+    parseur.add_argument(
+        "-n", "--nb_cells", type=entier_strictement_positif, default=10,
+        metavar="N",
+        help="nombre de cellules par côté d'une grille aléatoire (défaut : 10)")
+    parseur.add_argument(
+        "-m", "--max_iterations", type=entier_positif_ou_nul, default=20,
+        metavar="N",
+        help="numéro de la dernière itération à calculer (défaut : 20)")
+    parseur.add_argument(
+        "-s", "--seed", type=convertir_en_entier, default=42, metavar="N",
+        help="graine du générateur aléatoire (défaut : 42)")
+    parseur.add_argument(
+        "-o", "--output_directory", default="outputs", metavar="DOSSIER",
+        help="dossier d'écriture des images (défaut : outputs)")
+    parseur.add_argument(
+        "-t", "--output_type", choices=["image", "text"], default="image",
+        metavar="TYPE",
+        help="type de sortie : image ou text (défaut : image)")
+    parseur.add_argument(
+        "-p", "--periodic", action="store_true",
+        help="conditions aux limites périodiques (grille en tore)")
+    return parseur.parse_args()
+
 
 def random_grille(w: int, h:int, seed:int) -> Grille | None:  #returns Grid or None
     if w <= 0 or h <= 0: return None
@@ -57,3 +108,4 @@ def maj_cellule(state: int, live: int):    #checks rules, updates cells
     if state == 1 and live in (2, 3): return 1
     elif state == 0 and live == 3: return 1
     else: return 0
+
