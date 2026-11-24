@@ -1,20 +1,39 @@
-import random
+import sys
 
-from lib import write_grid
+from game_functions import (
+    ecrire_images,
+    ecrire_texte,
+    lire_arguments,
+    lire_grille,
+    lire_stdin_si_fournie,
+    random_grille,
+    simuler,
+)
+
 
 def main():
-    nb_cells = 50
+    args = lire_arguments()
+    try:
+        texte = lire_stdin_si_fournie()
+        if texte is None:
+            grille = random_grille(args.nb_cells, args.nb_cells, args.seed)
+        else:
+            grille = lire_grille(texte)
 
-    rng = random.Random(4200)
+        if args.output_type == "text":
+            finale = simuler(grille, args.max_iterations, args.periodic)
+            ecrire_texte(finale, args.max_iterations)
+        else:
+            ecrire_images(grille, args.max_iterations, args.periodic,
+                          args.output_directory)
+    except ValueError as erreur:
+        print(f"Erreur : {erreur}", file=sys.stderr)
+        return 1
+    except OSError as erreur:
+        print(f"Erreur d'écriture : {erreur}", file=sys.stderr)
+        return 1
+    return 0
 
-    matrix = [
-        [rng.choice([0, 1]) for _ in range(nb_cells)]
-        for _ in range(nb_cells)
-    ]
-
-    iter = 0
-    filename = f"outputs/grid_{iter:04d}.png"
-    write_grid(matrix=matrix, filename=filename)
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
