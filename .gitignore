@@ -3,5 +3,7 @@
 __pycache__/
 outputs/*
 !outputs/.keep
-
+gource.ppm
+*.mp4
+__pycache__/
 # frozar_main.py
