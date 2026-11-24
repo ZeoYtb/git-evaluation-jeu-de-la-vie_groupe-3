@@ -1,7 +1,9 @@
 from dataclasses import dataclass
+import os
 import random
 import argparse
 import sys
+from lib import write_grid
 
 @dataclass
 class Grille:
@@ -152,3 +154,26 @@ def maj_cellule(state: int, live: int):    #checks rules, updates cells
     elif state == 0 and live == 3: return 1
     else: return 0
 
+def formater_grille(grille):
+    return "\n".join(" ".join(str(cellule) for cellule in ligne)
+                     for ligne in grille.cells)
+
+
+def ecrire_texte(grille, iteration):
+    print(f"iteration: {iteration}")
+    print(formater_grille(grille))
+
+
+def simuler(grille, iterations, periodic):
+    for _ in range(iterations):
+        grille = next_gen(grille, periodic)
+    return grille
+
+def ecrire_images(grille, iterations, periodic, dossier):
+    os.makedirs(dossier, exist_ok=True)
+    for numero in range(iterations + 1):
+        nom_fichier = os.path.join(dossier, f"grid_{numero:04d}.png")
+        write_grid(matrix=grille.cells, filename=nom_fichier)
+        if numero < iterations:
+            grille = next_gen(grille, periodic)
+    print(f"Generation of {iterations + 1} images in directory {dossier}")
