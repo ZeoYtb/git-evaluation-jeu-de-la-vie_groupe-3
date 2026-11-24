@@ -26,21 +26,21 @@ def MAJ_grille(grid: Grille, periodic: bool) -> Grille:
 
 def Compter_voisins(grid: Grille, i: int, j: int, periodic: bool) -> int:   #returns no. of live neighbours
     live: int = 0
-    for di in range(-1, 2):         #offset i
-        for dj in range(-1, 2):     #offset j
-            if di == 0 and dj == 0: continue  #skip current cell
+    for offset_h in range(-1, 2):
+        for offset_w in range(-1, 2):
+            if offset_h == 0 and offset_w == 0: continue  #skip current cell
 
-            vi = i + di
-            vj = j + dj
+            voisin_h = i + offset_h
+            voisin_w = j + offset_w
 
             if periodic:    #grid wraps around
-                vi = vi % grid.height
-                vj = vj % grid.width
+                voisin_h %= grid.height   #voisin_h = voisin_h % grid.height
+                voisin_w %= grid.width
             else:
-                if vi < 0 or vj < 0 or vi >= grid.height or vj >= grid.width:
+                if voisin_h < 0 or voisin_w < 0 or voisin_h >= grid.height or voisin_w >= grid.width:
                     continue
 
-            live += grid.cells[vi][vj]
+            live += grid.cells[voisin_h][voisin_w]
 
     return live
 
