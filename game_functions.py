@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import random
 import argparse
+import sys
 
 @dataclass
 class Grille:
@@ -62,6 +63,48 @@ def lire_arguments():
         "-p", "--periodic", action="store_true",
         help="conditions aux limites périodiques (grille en tore)")
     return parseur.parse_args()
+
+def lire_stdin_si_fournie():
+    if sys.stdin.isatty():
+        return None
+    contenu = sys.stdin.read()
+    if contenu == "":
+        return None
+    return contenu
+
+
+def lire_grille(texte):
+    lignes = texte.splitlines()
+    while lignes and lignes[-1].strip() == "":
+        lignes.pop()
+    if not lignes:
+        raise ValueError("la grille fournie est vide")
+
+    try:
+        taille = int(lignes[0].strip())
+    except ValueError:
+        raise ValueError(
+            "la première ligne doit contenir la taille de la grille (un entier)")
+    if taille <= 0:
+        raise ValueError(f"la taille doit être strictement positive (reçu : {taille})")
+
+    lignes_grille = lignes[1:]
+    if len(lignes_grille) != taille:
+        raise ValueError(
+            f"{taille} lignes attendues après la taille, {len(lignes_grille)} reçues")
+
+    cells = []
+    for numero, ligne in enumerate(lignes_grille, start=2):
+        valeurs = ligne.split()
+        if len(valeurs) != taille:
+            raise ValueError(
+                f"ligne {numero} : {taille} cellules attendues, {len(valeurs)} reçues")
+        for valeur in valeurs:
+            if valeur not in ("0", "1"):
+                raise ValueError(
+                    f"ligne {numero} : cellule invalide '{valeur}' (0 ou 1 attendu)")
+        cells.append([int(valeur) for valeur in valeurs])
+    return Grille(width=taille, height=taille, cells=cells)
 
 
 def random_grille(w: int, h:int, seed:int) -> Grille | None:  #returns Grid or None
